@@ -50,7 +50,22 @@ client.once("ready", () => {
    3️⃣ Message handler
    ====================== */
 client.on("messageCreate", async (message) => {
+  // Ignore other bots
   if (message.author.bot) return;
+
+  // Only respond if bot is mentioned
+  if (!message.mentions.has(client.user)) return;
+
+  // Optional: prevent replying to empty mentions
+  const content = message.content
+    .replace(`<@${client.user.id}>`, "")
+    .replace(`<@!${client.user.id}>`, "")
+    .trim();
+
+  if (!content) {
+    await message.reply("Yeah? You tagged me but said nothing 😐");
+    return;
+  }
 
   try {
     await message.channel.sendTyping();
